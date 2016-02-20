@@ -1,0 +1,156 @@
+Node ID,Relationship with ME,Term,Gender,Generation,P. G. Distance,H. S. Distance,Uniqueness,inverse,Node ID + Term,Parent
+1,self,me,F,0,0,0,one,me,1:me,root
+1A,husband,husband,M,0,HA,1,usually one,wife,1A:husband,1
+1C,father,dad,M,-1,1,1,usually one,daughter,1C:dad,1
+1D,mother,mom,F,-1,1,1,usually one,daughter,1D:mom,1
+1E,son,son,M,1,1,1,no limit,mom,1E:son,1
+1F,daughter,daughter,F,1,1,1,no limit,mom,1F:daughter,1
+1G,older brother,brother,M,0,1,1.5,no limit,sister,1G:brother,1
+1H,young brother,brother,M,0,1,1.5,no limit,sister,1H:brother,1
+1I,older sister,sister,F,0,1,1.5,no limit,sister,1I:sister,1
+1J,younger sister,sister,F,0,1,1.5,no limit,sister,1J:sister,1
+1AC,husband's father,father-in-law,M,-1,HA,2,usually one,daughter-in-law,1AC:father-in-law,1A
+1AD,husband's mother,mother-in-law,F,-1,HA,2,usually one,daughter-in-law,1AD:mother-in-law,1A
+1AG,husband's older brother,brother-in-law,M,0,HA,2.5,no limit,sister-in-law,1AG:brother-in-law,1A
+1AH,husband's young brother,brother-in-law,M,0,HA,2.5,no limit,sister-in-law,1AH:brother-in-law,1A
+1AI,husband's older sister,sister-in-law,F,0,HA,2.5,no limit,sister-in-law,1AI:sister-in-law,1A
+1AJ,husband's younger sister,sister-in-law,F,0,HA,2.5,no limit,sister-in-law,1AJ:sister-in-law,1A
+1CC,father's father,grandpa,M,-2,2,2,usually two,granddaughter,1CC:grandpa,1C
+1CD,father's mother,grandma,F,-2,2,2,usually two,granddaughter,1CD:grandma,1C
+1CG,father's older brother,uncle,M,-1,2,2.5,no limit,niece,1CG:uncle,1C
+1CH,father's young brother,uncle,M,-1,2,2.5,no limit,niece,1CH:uncle,1C
+1CI,father's older sister,aunt,F,-1,2,2.5,no limit,niece,1CI:aunt,1C
+1CJ,father's younger sister,aunt,F,-1,2,2.5,no limit,niece,1CJ:aunt,1C
+1DC,mother's father,grandpa,M,-2,2,2,usually two,granddaughter,1DC:grandpa,1D
+1DD,mother's mother,grandma,F,-2,2,2,usually two,granddaughter,1DD:grandma,1D
+1DG,mother's older brother,uncle,M,-1,2,2.5,no limit,niece,1DG:uncle,1D
+1DH,mother's young brother,uncle,M,-1,2,2.5,no limit,niece,1DH:uncle,1D
+1DI,mother's older sister,aunt,F,-1,2,2.5,no limit,niece,1DI:aunt,1D
+1DJ,mother's younger sister,aunt,F,-1,2,2.5,no limit,niece,1DJ:aunt,1D
+1EB,son's wife,daughter-in-law,F,1,HA,2,no limit,mother-in-law,1EB:daughter-in-law,1E
+1EE,son's son,grandson,M,2,2,2,no limit,grandma,1EE:grandson,1E
+1EF,son's daughter,granddaughter,F,2,2,2,no limit,grandma,1EF:granddaughter,1E
+1FA,daughter's husband,son-in-law,M,1,HA,2,no limit,mother-in-law,1FA:son-in-law,1F
+1FE,daughter's son,grandson,M,2,2,2,no limit,grandma,1FE:grandson,1F
+1FF,daughter's daughter,granddaughter,F,2,2,2,no limit,grandma,1FF:granddaughter,1F
+1GB,older brother's wife,sister-in-law,F,0,HA,2.5,no limit,sister-in-law,1GB:sister-in-law,1G
+1GE,older brother's son,nephew,M,1,2,2.5,no limit,aunt,1GE:nephew,1G
+1GF,older brother's daughter,niece,F,1,2,2.5,no limit,aunt,1GF:niece,1G
+1HB,younger brother's wife,sister-in-law,F,0,HA,2.5,no limit,sister-in-law,1HB:sister-in-law,1H
+1HE,younger brother's son,nephew,M,1,2,2.5,no limit,aunt,1HE:nephew,1H
+1HF,younger brother's daughter,niece,F,1,2,2.5,no limit,aunt,1HF:niece,1H
+1IA,older sister's husband,brother-in-law,M,0,HA,2.5,no limit,sister-in-law,1IA:brother-in-law,1I
+1IE,older sister's son,nephew,M,1,2,2.5,no limit,aunt,1IE:nephew,1I
+1IF,older sister's daughter,niece,F,1,2,2.5,no limit,aunt,1IF:niece,1I
+1JA,younger sister's husband,brother-in-law,M,0,HA,2.5,no limit,sister-in-law,1JA:brother-in-law,1J
+1JE,younger sister's son,nephew,M,1,2,2.5,no limit,aunt,1JE:nephew,1J
+1JF,younger sister's daughter,niece,F,1,2,2.5,no limit,aunt,1JF:niece,1J
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,

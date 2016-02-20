@@ -1,0 +1,25 @@
+{
+  "name": "va-assignment",
+  "authors": [
+    "electronic Max <electronic@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "www/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "^3.5.15",
+    "jquery": "^2.2.0",
+    "less": "^2.6.0",
+    "underscore": "^1.8.3"
+  }
+}
