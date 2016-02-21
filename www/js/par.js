@@ -11,7 +11,8 @@ angular.module('pchealth')
 			    width = 960 - margin.left - margin.right,
 			    height = 500 - margin.top - margin.bottom;
 
-			var ordinals = ['dinner'];
+			var ordinals = ['dinner'],
+				dates = [];
 
 			var x = d3.scale.ordinal().rangePoints([0, width], 1),
 			    y = window.ys = {},
@@ -66,6 +67,8 @@ angular.module('pchealth')
 						y[d] = d3.scale.ordinal()
 							.domain(_.uniq(data.map((x) => x[d])))
 							.rangePoints([height, 0]);
+					} else if (dates.indexOf(d) >= 0) {
+						y[d] = d3.time.scale().range([height,0]);
 					} else {
 						y[d] = d3.scale.linear()
 						    .domain(d3.extent(data, function(p) { console.log(' value ', d, p[d], +p[d]); return +p[d]; }))
