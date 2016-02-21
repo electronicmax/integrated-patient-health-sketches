@@ -9,10 +9,10 @@ angular.module('pchealth')
 		controller: ($scope) => {
 			var margin = {top: 30, right: 10, bottom: 10, left: 10},
 			    width = 960 - margin.left - margin.right,
-			    height = 500 - margin.top - margin.bottom;
+			    height = 800 - margin.top - margin.bottom;
 
 			var ordinals = ['dinner'],
-				dates = [];
+				dates = ["date"];
 
 			var x = d3.scale.ordinal().rangePoints([0, width], 1),
 			    y = window.ys = {},
@@ -20,6 +20,7 @@ angular.module('pchealth')
 
 			var line = d3.svg.line(),
 			    axis = d3.svg.axis().orient("left"),
+			    dateaxis = d3.svg.axis().orient("left").tickFormat(d3.time.format("%b %e")).ticks(20),
 			    background,
 			    foreground,
 			    dimensions,
@@ -31,44 +32,23 @@ angular.module('pchealth')
 
 				console.info(' data and el ', data, $scope.el);
 				if (data === undefined || !$scope.el) { return; }
-				// normalise the horrible names with spaces
-				// data = _(data).map((d) => { 
-				// 	return _.reduce(d, (result, value, key) => {
-				// 	    key = key.replace(/[\s\.\+]/g, '').toLowerCase();
-				// 	    if (value == 'HA') { value = 4; }
-				// 	    result[key] = value;
-				// 	    return result;
-				// 	}, {});			
-				// });
 
-				// get rid of ones without nodeid -- extra blank rows thanks, excel!
-				// data = _(data).filter((d) => d.nodeid && d.nodeid.length > 0);
+				svg = d3.select($scope.el).selectAll('svg').data([0]);
 
-				// select some dimensions for fun first
-				// data = _(data).map((d) => { return _(d).pick('nodeid', 'gender', 'uniqueness', 'hsdistance', 'pgdistance', 'generation'); });
-
-
-				svg = d3.select($scope.el)
-					.selectAll('svg').data([0]);
-				console.info('svg >> ', svg);
-				svg.enter().append('svg') // d3.select("body").append("svg")
-				    .attr("width", width + margin.left + margin.right)
+				svg.enter().append('svg').attr("width", width + margin.left + margin.right)
 				    .attr("height", height + margin.top + margin.bottom)
-					.append("g")
-					    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
+					.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 				 // Extract the list of dimensions and create a scale for each.
 				x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
 					if (d.indexOf('$$') === 0) { return false; }
-
 					if (ordinals.indexOf(d) >= 0) { 
-						console.info('domain ', _.uniq(data.map((x) => x[d])));
 						y[d] = d3.scale.ordinal()
 							.domain(_.uniq(data.map((x) => x[d])))
 							.rangePoints([height, 0]);
 					} else if (dates.indexOf(d) >= 0) {
-						y[d] = d3.time.scale().range([height,0]);
+						var extent = d3.extent(data, (x) => x[d].valueOf());	
+						y[d] = d3.time.scale().domain(extent).range([height,0]);
 					} else {
 						y[d] = d3.scale.linear()
 						    .domain(d3.extent(data, function(p) { console.log(' value ', d, p[d], +p[d]); return +p[d]; }))
@@ -93,8 +73,7 @@ angular.module('pchealth')
 				  .attr("d", path);
 
 				// Add a group element for each dimension.
-				var g = svg.selectAll(".dimension")
-				  .data(dimensions)
+				var g = svg.selectAll(".dimension").data(dimensions)
 				.enter().append("g")
 				  .attr("class", "dimension")
 				  .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
@@ -125,11 +104,16 @@ angular.module('pchealth')
 				// Add an axis and title.
 				g.append("g")
 				  .attr("class", "axis")
-				  .each(function(d) { d3.select(this).call(axis.scale(y[d])); })
+				  .each(function(d) { 
+				  	if (dates.indexOf(d) >= 0) { 
+				  		return d3.select(this).call(dateaxis.scale(y[d]));
+				  	}
+				  	return d3.select(this).call(axis.scale(y[d])); 
+				  })
 				.append("text")
 				  .style("text-anchor", "middle")
 				  .attr("y", -9)
-				  .text(function(d) { return d; });
+				  .text((d) => d);
 
 				// Add and store a brush for each axis.
 				g.append("g")
@@ -157,7 +141,7 @@ angular.module('pchealth')
 		// Returns the path for a given data point.
 		function path(d) {
 		  return line(dimensions.map(function(p) { 
-		  	console.info(p, [position(p), y[p](d[p])]);
+		  	// console.info(p, [position(p), y[p](d[p])]);
 		  	return [position(p), y[p](d[p])]; 
 		  }));
 		}
