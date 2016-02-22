@@ -17,8 +17,18 @@ angular.module('pchealth')
 			createBase : (start,end) =>  {
 				return this_.createTimeSeries(start,end).map((x) => ({date:x}));
 			},
+			slidingRandom:(base, field, variance, min, max) => { 
+				var last = min + (max-min)*Math.random();
+				base.map((x) => {
+					x[field] = last+variance*(Math.random()-0.5); // Math.min(Math.max(min, last + variance*Math.random()), max);
+					last = x[field];
+				});
+				return base;
+			},
 			addINRs: (base) => {
-				return base.map((x) => _.extend(x,  { inr : 1.5+Math.random() }));
+				return this_.slidingRandom(base, 'inr', 0.5, 0.5, 4.0); // base.map((x) => _.extend(x,  { inr : 1.5+Math.random() }));
+
+				// return base.map((x) => _.extend(x,  { inr : 1.5+Math.random() }));
 			},
 			addChoice: (base, field, choices) => {
 				var choose = () => choices[Math.floor(choices.length*Math.random())];
