@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      html, body { height: 100%; margin: 0; padding: 0; }
+      #map { height: 80%; width:100%; }
+    	.timeline { 
+    		border:1px solid green; 
+    		/*bottom:0px; left:0px; right:0px; height:500px;*/
+    		width:100%;
+    		height:500px;
+    		z-index:100;
+    	}
+		.bar {
+		  fill: steelblue;
+		}
+
+		.bar:hover {
+		  fill: brown;
+		}
+
+		.axis {
+		  font: 10px sans-serif;
+		}
+
+		.axis path,
+		.axis line {
+		  fill: none;
+		  stroke: #000;
+		  shape-rendering: crispEdges;
+		}
+
+		.x.axis path {
+		  display: none;
+		}
+	</style>
+  </head>
+  <body ng-app="pchealth" ng-controller="gmaps">
+    <div id="map"></div>
+    <timeline data="data"></timeline>
+    <script type="text/javascript">
+		var map, init = new Promise((acc, rej) => { window.initAcc = acc; });
+    </script>
+	<script type="text/javascript" src="lib/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="lib/angular/angular.min.js"></script>
+	<script type="text/javascript" src="lib/lodash/lodash.js"></script>
+	<script type="text/javascript" src="lib/less/dist/less.min.js"></script>
+	<script type="text/javascript" src="lib/d3/d3.min.js"></script>
+	<script type="text/javascript" src="lib/moment/moment.js"></script>
+	<script type="text/javascript" src="js/pchealth.js"></script>
+	<script type="text/javascript" src="js/datafab.js"></script>
+	<script type="text/javascript" src="js/par.js"></script>
+    <script  src="js/gmaps.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGDA3z6UKn6d355JxgfbVjwBzMBVVHr9A&callback=initAcc"></script>
+  </body>
+</html>
