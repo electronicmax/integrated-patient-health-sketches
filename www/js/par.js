@@ -24,7 +24,10 @@ angular.module('pchealth')
 			    background,
 			    foreground,
 			    dimensions,
+			    inrcolour = d3.scale.linear().domain([0.5,1.0,3.0,3.5]).range(["red","#aaa","#aaa","red"]),
 			    svg;
+
+
 
 
 			$scope.$watch('data', () => {
@@ -51,7 +54,7 @@ angular.module('pchealth')
 						y[d] = d3.time.scale().domain(extent).range([height,0]);
 					} else {
 						y[d] = d3.scale.linear()
-						    .domain(d3.extent(data, function(p) { console.log(' value ', d, p[d], +p[d]); return +p[d]; }))
+						    .domain(d3.extent(data, function(p) { return +p[d]; }))
 						    .range([height, 0]);
 					}
 					return true;
@@ -70,7 +73,8 @@ angular.module('pchealth')
 				.selectAll("path")
 				  .data(data)
 				.enter().append("path")
-				  .attr("d", path);
+				  .attr("d", path)
+				  .attr('style',function(d) { console.log(d.inr); return "stroke:"+inrcolour(d.inr); });
 
 				// Add a group element for each dimension.
 				var g = svg.selectAll(".dimension").data(dimensions)
