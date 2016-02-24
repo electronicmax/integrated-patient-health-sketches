@@ -1,4 +1,4 @@
-/* globals angular, d3, console, init, $ */
+/* globals angular, d3, console, init, $, google */
 
 angular.module('pchealth')
 	.controller('gmaps', function($scope) {
@@ -6,12 +6,10 @@ angular.module('pchealth')
 			var map = new google.maps.Map(document.getElementById('map'), {
 			    center: {lat: -34.397, lng: 150.644},
 			    zoom: 15
-		    }), pLs = window.pLs = [];
+		    }), pLs = [], markers = {};
 			$.get('data/storyline.json').then((data) => {
 				window.d = data;
 				$scope.$apply(() => { $scope.data = data; });
-
-				console.log(data);
 			});  		    
 
 			var selectDay = (day) => {
@@ -21,12 +19,38 @@ angular.module('pchealth')
 					pLs.map((pL) => pL.setMap(null));
 					pLs = [];
 				}
+				_.keys(markers).map((mk) => {
+					if (mk == '_') { 
+						markers[mk].map((m) => m.setMap(null));
+					} else {
+						markers[mk].setMap(null);
+					}
+				});
+				markers = {};
 				day.segments.map((x) => {
+
 					if (x.type == 'place') {
 						var lat = x.place.location.lat, 
 							lng = x.place.location.lon,
 							name = x.place.name;
 						console.info('place >> ', name, lat,lng );
+						if (name !== undefined && !markers[name]) { 
+							markers[name] = new google.maps.Marker({
+							    position: {lat: lat, lng: lng},
+							    map: map,
+							    title:name
+							    // icon: image
+							 });			
+							markers[name].setMap(map);
+						} else {
+							console.info('nameless ');
+							markers._ = markers._ || [];
+							markers._.push( new google.maps.Marker({
+							    position: {lat: lat, lng: lng},
+							    map: map
+							 }));
+						}
+
 					} else if (x.activities) {
 						// create a polyline
 						x.activities.map((acT) => {
