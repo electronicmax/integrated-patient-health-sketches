@@ -3,28 +3,60 @@
 angular.module('pchealth')
 	.controller('gmaps', function($scope) {
 		init.then(() => { 
-			// $scope.map = new google.maps.Map(document.getElementById('map'), {
-			//     center: {lat: -34.397, lng: 150.644},
-			//     zoom: 8
-  	// 	    });
-	  	console.info('loading data');		
+			var map = new google.maps.Map(document.getElementById('map'), {
+			    center: {lat: -34.397, lng: 150.644},
+			    zoom: 8
+		    });
 			$.get('data/storyline.json').then((data) => {
 				window.d = data;
-				$scope.$apply(() => { 
-					$scope.data = data; 
-				});
+				$scope.$apply(() => { $scope.data = data; });
+
 				console.log(data);
 			});  		    
+
+			var selectDay = (day) => {
+				if (!day) { return; }
+				// console.log('day selected ', x);
+				day.segments.map((x) => {
+					if (x.type == 'place') {
+						var lat = x.place.location.lat, 
+							lng = x.place.location.lon,
+							name = x.place.name;
+						console.info('place >> ', name, lat,lng );
+					} else if (x.activities) {
+						// create a polyline
+						x.activities.map((acT) => {
+							console.info('activity type ', acT.type);
+							var pL = new google.maps.Polyline({
+								path: acT.trackPoints.map((tp) => { 
+									var lat = tp.lat, lon = tp.lon;
+									return { lat: lat, lng : lon };
+								}),
+								geodesic:true,
+								strokeColor:"#00ffee",
+								strokeWeight:1,
+								strokeOpacity:0.8
+							});
+							pL.setMap(map);
+						});
+					}
+				});
+			};
+
+			$scope.$watch('daySelected', () => { selectDay($scope.daySelected); });
 	   });
 	}).directive('timeline', () => {
 		return { 
-			restrict:'E', scope:{data:'='}, replace:true,
+			restrict:'E', 
+			scope:{data:'=', selected:'='}, 
+			replace:true,
 			template:'<div class="timeline"></div>', 
 			link:($s, $e) => { $s.el = $e[0]; },
 			controller:($scope) => {
 				var render = () => {
 					if (!$scope.data) { return; }
-					var data = $scope.data;
+					var data = $scope.data,
+						selected;
 					data.map((x) => { 
 						var d = x.date;
 						x.date = new Date([d.slice(0,4),'-',d.slice(4,6),'-',d.slice(6,8)].join(''));
@@ -32,12 +64,12 @@ angular.module('pchealth')
 					console.log(data);
 					var margin = {top: 20, right: 20, bottom: 30, left: 40},
 					    width = 960 - margin.left - margin.right,
-					    height = 500 - margin.top - margin.bottom;
+					    height = 400 - margin.top - margin.bottom;
 
 					console.log('extent ', d3.extent(data, (x) => x.date));
 
-					var x = d3.time.scale().domain(d3.extent(data, (x) => x.date)).range([0,width]),
-						xord = d3.scale.ordinal().domain((x) => x.date).rangeRoundBands([0, width], 0.1);
+					var x = d3.time.scale().domain(d3.extent(data, (x) => x.date)).range([0,width]);
+						// xord = d3.scale.ordinal().domain((x) => x.date).rangeRoundBands([0, width], 0.1);
 
 					window.xtime = x;
 
@@ -78,14 +110,12 @@ angular.module('pchealth')
 				    .enter().append("rect")
 				      .attr("class", "bar")
 				      .attr("x", function(d) { console.log(d.date, ' ', x(d.date)); return x(d.date); })
-				      .attr("width", xord.rangeBand())
+				      .attr("width", 1) // xord.rangeBand())
 				      .attr("y", function(d) { return y(d.segments.length); })
-				      .attr("height", function(d) { return height - y(d.segments.length); });
+				      .attr("height", function(d) { return height - y(d.segments.length); })
+				      .on('click', (d) => { console.log(d); $scope.$apply(() => { $scope.selected = d; }); window.ds = selected; });
 				};
-				function type(d) {
-				  d.frequency = +d.frequency;
-				  return d;
-				}					
+				// function type(d) { d.frequency = +d.frequency;  return d;	}					
 				$scope.$watch('data', render);
 			}
 		};
