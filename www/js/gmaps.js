@@ -5,8 +5,8 @@ angular.module('pchealth')
 		init.then(() => { 
 			var map = new google.maps.Map(document.getElementById('map'), {
 			    center: {lat: -34.397, lng: 150.644},
-			    zoom: 8
-		    });
+			    zoom: 15
+		    }), pLs = window.pLs = [];
 			$.get('data/storyline.json').then((data) => {
 				window.d = data;
 				$scope.$apply(() => { $scope.data = data; });
@@ -17,6 +17,10 @@ angular.module('pchealth')
 			var selectDay = (day) => {
 				if (!day) { return; }
 				// console.log('day selected ', x);
+				if (pLs.length > 0) {
+					pLs.map((pL) => pL.setMap(null));
+					pLs = [];
+				}
 				day.segments.map((x) => {
 					if (x.type == 'place') {
 						var lat = x.place.location.lat, 
@@ -26,19 +30,24 @@ angular.module('pchealth')
 					} else if (x.activities) {
 						// create a polyline
 						x.activities.map((acT) => {
-							console.info('activity type ', acT.type);
+							console.info('activity type ', acT);
 							var pL = new google.maps.Polyline({
 								path: acT.trackPoints.map((tp) => { 
 									var lat = tp.lat, lon = tp.lon;
 									return { lat: lat, lng : lon };
 								}),
 								geodesic:true,
-								strokeColor:"#00ffee",
-								strokeWeight:1,
+								strokeColor:"#2288cc",
+								strokeWeight:3,
 								strokeOpacity:0.8
 							});
 							pL.setMap(map);
+							pLs.push(pL);
 						});
+					}
+					if (pLs.length > 0) { 
+						console.info('setting centre ', pLs[0].getPath().getArray()[0]);
+						map.setCenter(pLs[0].getPath().getArray()[0]);
 					}
 				});
 			};
@@ -113,7 +122,7 @@ angular.module('pchealth')
 				      .attr("width", 1) // xord.rangeBand())
 				      .attr("y", function(d) { return y(d.segments.length); })
 				      .attr("height", function(d) { return height - y(d.segments.length); })
-				      .on('click', (d) => { console.log(d); $scope.$apply(() => { $scope.selected = d; }); window.ds = selected; });
+				      .on('mouseover', (d) => { console.log(d); $scope.$apply(() => { $scope.selected = d; }); window.ds = selected; });
 				};
 				// function type(d) { d.frequency = +d.frequency;  return d;	}					
 				$scope.$watch('data', render);
