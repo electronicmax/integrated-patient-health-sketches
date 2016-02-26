@@ -1,4 +1,4 @@
-/* globals angular, d3, console, init, $, google */
+/* globals angular, d3, console, init, $, google, _ */
 
 angular.module('pchealth')
 	.controller('gmaps', function($scope) {
@@ -6,7 +6,14 @@ angular.module('pchealth')
 			var map = new google.maps.Map(document.getElementById('map'), {
 			    center: {lat: -34.397, lng: 150.644},
 			    zoom: 15
-		    }), pLs = [], markers = {};
+		    }), pLs = [], 
+		    markers = {},
+		    selectMarker = (m) => {  
+		    	var lat = m.getPosition().lat(),
+		    		lon = m.getPosition().lng();
+		    	console.info('marker', m, m.__data, lat, lon); 
+		    };
+		    
 			$.get('data/storyline.json').then((data) => {
 				window.d = data;
 				$scope.$apply(() => { $scope.data = data; });
@@ -40,17 +47,21 @@ angular.module('pchealth')
 							    map: map,
 							    title:name
 							    // icon: image
-							 });			
+							 });
 							markers[name].setMap(map);
+							markers[name].addListener('mouseover', () => { selectMarker(markers[name]); });
+							markers[name].__data = x;
 						} else {
 							console.info('nameless ');
-							markers._ = markers._ || [];
-							markers._.push( new google.maps.Marker({
+							var m = new google.maps.Marker({
 							    position: {lat: lat, lng: lng},
 							    map: map
-							 }));
+							});
+							markers._ = markers._ || [];
+							markers._.push( m );
+							m.__data = x;
+							m.addListener('mouseover', () => { selectMarker(m); });
 						}
-
 					} else if (x.activities) {
 						// create a polyline
 						x.activities.map((acT) => {
@@ -71,7 +82,7 @@ angular.module('pchealth')
 					}
 					if (pLs.length > 0) { 
 						console.info('setting centre ', pLs[0].getPath().getArray()[0]);
-						map.setCenter(pLs[0].getPath().getArray()[0]);
+						map.panTo(pLs[0].getPath().getArray()[0]);
 					}
 				});
 			};
@@ -150,6 +161,13 @@ angular.module('pchealth')
 				};
 				// function type(d) { d.frequency = +d.frequency;  return d;	}					
 				$scope.$watch('data', render);
+			}
+		};
+	}).directive('markerbox', () => {
+		return { 
+			scope:{selected:'='},
+			controller: ($scope) => {
+				$scope.$watch('selected', () => { console.info('markerbox > ', $scope.selected); });
 			}
 		};
 	});

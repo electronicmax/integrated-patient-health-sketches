@@ -8,7 +8,7 @@ angular.module('pchealth')
 		link: ($s, $e) => {	$s.el = $e[0]; },
 		controller: ($scope) => {
 			var margin = {top: 30, right: 10, bottom: 10, left: 10},
-			    width = 960 - margin.left - margin.right,
+			    width = 1560 - margin.left - margin.right,
 			    height = 800 - margin.top - margin.bottom;
 
 			var ordinals = ['dinner'],
