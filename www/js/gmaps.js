@@ -1,5 +1,16 @@
 /* globals angular, d3, console, init, $, google, _ */
 
+var fromMovesDate = function(m_date) {
+    console.log('from Moves Date >> ', m_date);
+    var year = m_date.slice(0,4), m = m_date.slice(4,6), d = m_date.slice(6,8);
+    var hour = m_date.slice(9,11), min = m_date.slice(11,13), sec = m_date.slice(13,15);
+    var newdate = [year, m, d].join('/');
+    var newtime = [hour,min, sec].join(':');
+    var toret =  new Date(newtime + ' ' + newdate);
+    console.log('to return >> ', toret);
+    return toret;
+};
+
 angular.module('pchealth')
 	.controller('gmaps', function($scope) {
 		init.then(() => { 
@@ -12,6 +23,7 @@ angular.module('pchealth')
 		    	var lat = m.getPosition().lat(),
 		    		lon = m.getPosition().lng();
 		    	console.info('marker', m, m.__data, lat, lon); 
+		    	$scope.$apply(() => { $scope.selected = m; });
 		    };
 		    
 			$.get('data/storyline.json').then((data) => {
@@ -166,6 +178,21 @@ angular.module('pchealth')
 	}).directive('markerbox', () => {
 		return { 
 			scope:{selected:'='},
+			template:"<div class='markerbox'><h1>{{selectedName}}</h1>  {{ selectedDetails  }}</div>",
+			link:($s, $e) => { 
+				$s.$watch('selected', () => { 
+					if ($s.selected !== undefined) { 
+						var sdata = $s.selected.__data,
+							start = fromMovesDate(sdata.startTime),
+							end = fromMovesDate(sdata.endTime),
+							dursecs = (end.valueOf() - start.valueOf()) / 1000.0;
+						console.log('selected data ', sdata);
+						$s.selectedName = sdata.place.name ? sdata.place.name : 'Unknown place';
+						$s.selectedDetails = dursecs > 60*60 ? (Math.round(dursecs/3600) + " hrs, ") + (Math.floor(dursecs/60))%60 + " mins" : Math.round(dursecs/60) + " mins";
+						$e.slideDown(); 
+					} else { $e.slideUp(); }
+				});
+			},
 			controller: ($scope) => {
 				$scope.$watch('selected', () => { console.info('markerbox > ', $scope.selected); });
 			}

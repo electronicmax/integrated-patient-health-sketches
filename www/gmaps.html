@@ -3,7 +3,7 @@
   <head>
     <style>
 
-      html, body { height: 100%; margin: 0; padding: 0; }
+      html, body { height: 100%; margin: 0; padding: 0; font-family:sans-serif; font-weight:100;}
       #map { height: 80%; width:100%; }
 
     	.timeline { 
@@ -37,7 +37,20 @@
 		.x.axis path {
 		  display: none;
 		}
-
+		.markerbox { 
+			z-index:100;
+			background-color:rgba(255,255,255,0.79);
+			position:absolute;
+			right:20px;
+			top:20px;
+			height:140px;
+			width:200px;
+			padding:20px;
+		}
+		.markerbox h1 { 
+			margin:0px 0px 20px 0px;
+			font-size:14pt;
+		}
 	</style>
 	<title>maps</title>
   </head>
