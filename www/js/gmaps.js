@@ -109,6 +109,7 @@ angular.module('pchealth')
 			template:'<div class="timeline"></div>', 
 			link:($s, $e) => { $s.el = $e[0]; },
 			controller:($scope) => {
+
 				var render = () => {
 					if (!$scope.data) { return; }
 					var data = $scope.data,
@@ -117,10 +118,10 @@ angular.module('pchealth')
 						var d = x.date;
 						x.date = new Date([d.slice(0,4),'-',d.slice(4,6),'-',d.slice(6,8)].join(''));
 					});
-					console.log(data);
-					var margin = {top: 20, right: 20, bottom: 30, left: 40},
-					    width = 960 - margin.left - margin.right,
-					    height = 400 - margin.top - margin.bottom;
+					// console.log(data);
+					var margin = {top: 20, right: 0, bottom: 30, left: 50},
+					    width = $($scope.el).width() - margin.left - margin.right,
+					    height = $($scope.el).height() - margin.top - margin.bottom;
 
 					console.log('extent ', d3.extent(data, (x) => x.date));
 
@@ -138,8 +139,8 @@ angular.module('pchealth')
 					    .ticks(10, "%");
 
 					var svg = d3.select($scope.el).append("svg")
-					    .attr("width", width + margin.left + margin.right)
-					    .attr("height", height + margin.top + margin.bottom)
+					    // .attr("width", width + margin.left + margin.right)
+					    // .attr("height", height + margin.top + margin.bottom)
 					  .append("g")
 					    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
