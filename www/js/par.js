@@ -11,8 +11,8 @@ angular.module('pchealth')
 			    function () { 
 			    	console.info('pxh', $e.parent()[0], $e.parent().width(), $e.parent().height());
 			        return {
-			           width: $e.width(),
-			           height: $e.height(),
+			           width: $($e[0]).width(),
+			           height: $($e[0]).height(),
 			        };
 			   },
 			   () => { console.info('resize '); $s.render() }, //listener 
@@ -20,7 +20,7 @@ angular.module('pchealth')
 			);	
 		},
 		controller: ($scope, $timeout) => {
-			var margin = {top: 30, right: 10, bottom: 10, left: 10},
+			var margin = {top: 20, right: 10, bottom: 30, left: 10},
 			    width = ($scope.el && $($scope.el).width() || 1560) - margin.left - margin.right,
 			    height = ($scope.el && $($scope.el).height() || 800) - margin.top - margin.bottom;
 
@@ -37,7 +37,7 @@ angular.module('pchealth')
 			    background,
 			    foreground,
 			    dimensions,
-			    inrcolour = d3.scale.linear().domain([0.5,1.0,3.0,3.5]).range(["red","#aaa","#aaa","red"]),
+			    inrcolour = d3.scale.linear().domain([0.5,2.0,4.0,8]).range(["red","#aaa","#aaa","red"]),
 			    svg;
 
 			$scope.render = () => {
@@ -65,14 +65,15 @@ angular.module('pchealth')
 					if (ordinals.indexOf(d) >= 0) { 
 						y[d] = d3.scale.ordinal()
 							.domain(_.uniq(data.map((x) => x[d])))
-							.rangePoints([height, 0]);
+							.rangePoints([height, margin.top]);
 					} else if (dates.indexOf(d) >= 0) {
 						var extent = d3.extent(data, (x) => x[d].valueOf());	
-						y[d] = d3.time.scale().domain(extent).range([height,0]);
+						console.info('date extent ', new Date(extent[0]), new Date(extent[1]));
+						y[d] = d3.time.scale().domain([extent[1],extent[0]]).range([height,margin.top]);
 					} else {
 						y[d] = d3.scale.linear()
 						    .domain(d3.extent(data, function(p) { return +p[d]; }))
-						    .range([height, 0]);
+						    .range([height, margin.top]);
 					}
 					return true;
 				}));
@@ -91,7 +92,7 @@ angular.module('pchealth')
 				  .data(data)
 				.enter().append("path")
 				  .attr("d", path)
-				  .attr('style',function(d) { console.log(d.inr); return "stroke:"+inrcolour(d.inr); });
+				  .attr('style',function(d) { return "stroke:"+inrcolour(d.inr); });
 
 				// Add a group element for each dimension.
 				var g = svg.selectAll(".dimension").data(dimensions)

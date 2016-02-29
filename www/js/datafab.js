@@ -4,12 +4,12 @@ angular.module('pchealth')
 	.service('datafab', function() {
 
 		var dinner = {
-			'chicken roast':50,
-			'beef roast':20,
-			'spinach casserole':200,
-			'bolognese':50,
-			'chard':150,
-			'broccoli':180
+			'chicken roast':10,
+			'beef roast':10,
+			'spinach casserole':180,
+			'bolognese':20,
+			'chard':190,
+			'broccoli':190
 		};
 
 		var this_ = {
@@ -70,8 +70,23 @@ angular.module('pchealth')
 				console.log('dinner choices ', _.keys(dinner));
 				return this_.addChoice(base,'dinner',_.keys(dinner));
 			},
+			addTemp:(base) => {
+				var by_month = [ 2, 3, 8, 12, 15, 20, 22, 20, 15, 14, 11, 8 ],
+					blast = by_month[0];
+				base.map((b) => { 
+					console.info(new Date(b.date).getMonth());
+					var avg = by_month[new Date(b.date).getMonth()],
+						variance = 8;
+					b.temp = (variance * Math.random()) + avg;
+					// blast = b.temp;
+				});				
+				return base;
+			},
 			test: () => {
-				return this_.addINRBiased(this_.addDinner(this_.createBase()));
+				return this_.addTemp(this_.addINRBiased(this_.addDinner(this_.createBase(
+					new Date('January 1, 2015'),
+					new Date('December 31, 2015')
+				))));
 			}
 		};
 		window.fab = this_;
