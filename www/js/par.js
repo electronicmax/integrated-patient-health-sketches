@@ -5,11 +5,24 @@ angular.module('pchealth')
 		restrict:'E',
 		replace:true,
 		template:'<div class="parcoords"></div>',
-		link: ($s, $e) => {	$s.el = $e[0]; },
-		controller: ($scope) => {
+		link: ($s, $e) => {	
+			$s.el = $e[0]; 
+			$s.$watch(
+			    function () { 
+			    	console.info('pxh', $e.parent()[0], $e.parent().width(), $e.parent().height());
+			        return {
+			           width: $e.width(),
+			           height: $e.height(),
+			        };
+			   },
+			   () => { console.info('resize '); $s.render() }, //listener 
+			   true //deep watch
+			);	
+		},
+		controller: ($scope, $timeout) => {
 			var margin = {top: 30, right: 10, bottom: 10, left: 10},
-			    width = 1560 - margin.left - margin.right,
-			    height = 800 - margin.top - margin.bottom;
+			    width = ($scope.el && $($scope.el).width() || 1560) - margin.left - margin.right,
+			    height = ($scope.el && $($scope.el).height() || 800) - margin.top - margin.bottom;
 
 			var ordinals = ['dinner'],
 				dates = ["date"];
@@ -27,19 +40,23 @@ angular.module('pchealth')
 			    inrcolour = d3.scale.linear().domain([0.5,1.0,3.0,3.5]).range(["red","#aaa","#aaa","red"]),
 			    svg;
 
-
-
-
-			$scope.$watch('data', () => {
-				var data = $scope.data;		
-
-				console.info(' data and el ', data, $scope.el);
+			$scope.render = () => {
+			    console.info('render!');
+				var data = $scope.data;
 				if (data === undefined || !$scope.el) { return; }
 
+			    width = $($scope.el).width()- margin.left - margin.right;
+			    height = $($scope.el).height() - margin.top - margin.bottom;
+				x.rangePoints([0, width], 1);
+
+			    console.info('updated dims :: ', width, ' - ', height, data, $scope.el);
+
+				d3.select($scope.el).selectAll('svg').remove();				
 				svg = d3.select($scope.el).selectAll('svg').data([0]);
 
-				svg.enter().append('svg').attr("width", width + margin.left + margin.right)
-				    .attr("height", height + margin.top + margin.bottom)
+				svg.enter().append('svg')
+					// .attr("width", width + margin.left + margin.right)
+				 //    .attr("height", height + margin.top + margin.bottom)
 					.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 				 // Extract the list of dimensions and create a scale for each.
@@ -131,7 +148,13 @@ angular.module('pchealth')
 
 
 				window.data = data;
-			});
+			};
+
+		$timeout(() => { 
+			$scope.$watch('data',$scope.render);
+			$scope.render();
+		}, 1000);
+
 
 		function position(d) {
 		  var v = dragging[d];
@@ -153,7 +176,7 @@ angular.module('pchealth')
 		function brushstart() {
 		  d3.event.sourceEvent.stopPropagation();
 		}
-
+		window.s = $scope;
 		// Handles a brush event, toggling the display of foreground lines.
 		function brush() {
 		  var actives = dimensions.filter(function(p) { return !y[p].brush.empty(); }),
