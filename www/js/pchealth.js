@@ -3,4 +3,5 @@ angular.module('pchealth',[])
 		console.log('thing');
 		window.dfb = datafab;		
 		$scope.days = datafab.test();
+		$scope.hideline = false;
 	});

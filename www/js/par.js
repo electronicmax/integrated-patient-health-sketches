@@ -37,7 +37,7 @@ angular.module('pchealth')
 			    background,
 			    foreground,
 			    dimensions,
-			    inrcolour = d3.scale.linear().domain([0.5,2.0,4.0,8]).range(["red","#aaa","#aaa","red"]),
+			    inrcolour = d3.scale.linear().domain([0.5,2.0,2.9,8.0]).range(["red","#aaa","#aaa","orange"]),
 			    svg;
 
 			$scope.render = () => {
@@ -51,10 +51,11 @@ angular.module('pchealth')
 
 			    console.info('updated dims :: ', width, ' - ', height, data, $scope.el);
 
-				d3.select($scope.el).selectAll('svg').remove();				
+				d3.select($scope.el).selectAll('svg.par').remove();				
 				svg = d3.select($scope.el).selectAll('svg').data([0]);
 
 				svg.enter().append('svg')
+					.attr('class','par')
 					// .attr("width", width + margin.left + margin.right)
 				 //    .attr("height", height + margin.top + margin.bottom)
 					.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");

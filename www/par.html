@@ -11,6 +11,9 @@
 
 	<body ng-app="pchealth" ng-controller="par">
 		<parcoords data="days"></parcoords>		
+		<parline data="days" hide='hideline'></parline>		
+		<button ng-click="hideline = !hideline">hide line</button>
+		
 <!--		<ul>
 			<li ng-repeat="d in days"> {{d.date}} - {{ d.dinner }} - {{ d.inr }} </li>
 		</ul> -->
@@ -23,5 +26,6 @@
 		<script type="text/javascript" src="js/pchealth.js"></script>
 		<script type="text/javascript" src="js/datafab.js"></script>
 		<script type="text/javascript" src="js/par.js"></script>
+		<script type="text/javascript" src="js/par-line.js"></script>
 	</body>
 </html>

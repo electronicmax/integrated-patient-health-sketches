@@ -5,11 +5,15 @@ angular.module('pchealth')
 
 		var dinner = {
 			'chicken roast':10,
-			'beef roast':10,
-			'spinach casserole':180,
-			'bolognese':20,
-			'chard':190,
-			'broccoli':190
+			'beef roast':-10,
+			'spinach casserole':100,
+			'bolognese':-20,
+			'chard':100,
+			'broccoli':190,
+			'brussel sprouts':100,
+			'pizza':-20,
+			'bean casserole':-20,
+			'steak':-50
 		};
 
 		var this_ = {
@@ -28,9 +32,9 @@ angular.module('pchealth')
 				return this_.createTimeSeries(start,end).map((x) => ({date:x}));
 			},
 			slidingRandom:(base, field, variance, min, max) => { 
-				var last = min + (max-min)*Math.random();
+				var last = min + (max-min)*(Math.random() - 0.5);
 				base.map((x) => {
-					x[field] = Math.max(min,Math.min(max, last+variance*(Math.random()-0.5))); // Math.min(Math.max(min, last + variance*Math.random()), max);
+					x[field] = last+variance*(Math.random()-0.5); // Math.max(min,Math.min(max, last+variance*(Math.random()-0.5))); // Math.min(Math.max(min, last + variance*Math.random()), max);
 					last = x[field];
 				});
 				return base;
@@ -39,7 +43,7 @@ angular.module('pchealth')
 				return this_.slidingRandom(base, 'inr', 0.1, 0.5, 4.0); // base.map((x) => _.extend(x,  { inr : 1.5+Math.random() }));
 			},
 			addINRBiased: (base) => {
-				var min = 0.8, max = 3.5,
+				var min = 0.8, max = 3.2,
 					last = min + (max-min)*Math.random(),
 					ext = d3.extent(_.values(dinner)),
 					stdnormal = _.keys(dinner).reduce((arr, k) => { 
@@ -49,13 +53,12 @@ angular.module('pchealth')
 						arr[k] = (dinner[k]-avg)/(ext[1]-ext[0]);
 						return arr;
 					},{}),
-					variance = 0.1;
-				console.log('stdnormal' , stdnormal);
+					variance = 0.2;
 				base.map((x) => {
 					var bias = stdnormal[x.dinner];
 					console.info(' dinner ', x.dinner, bias);
-
-					x.inr = Math.max(min,Math.min(max, last+variance*(Math.random()-0.5 - 5*bias))); // Math.min(Math.max(min, last + variance*Math.random()), max);
+					// x.inr = last+variance*(Math.random()-0.5 - 5*bias)
+					x.inr = Math.max(min + 0.1*Math.random(),Math.min(max + 0.5*Math.random(), last+variance*(Math.random()-0.5 - 5*bias))); // Math.min(Math.max(min, last + variance*Math.random()), max);
 					last = x.inr;
 				});
 				return base;

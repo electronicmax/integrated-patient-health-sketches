@@ -30,7 +30,17 @@ body, html {
 text {
   font-size:10pt;
 }
-
+.parline {
+  position:absolute;  
+  background-color:rgba(255,255,255,0.9);
+  top:10px; bottom:80px; left:5px; right:5px;
+  // border:1px solid #eee;
+}
+.parline svg {
+  // position:absolute; 
+  // top:0px; right:0px; bottom:0px; left:0px;
+  width:100%; height:100%;
+}
 
 svg {
   font: 10px sans-serif;
@@ -44,7 +54,8 @@ svg {
 
 .foreground path {
   fill: none;
-  stroke: steelblue;
+  // stroke: steelblue;
+  stroke:#888;
 }
 
 .brush .extent {
